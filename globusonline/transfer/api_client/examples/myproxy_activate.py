@@ -42,13 +42,13 @@ def input_default(field_name, default, private=False):
         if private:
             value = getpass(prompt)
         else:
-            value = raw_input(prompt).strip()
+            value = input(prompt).strip()
         if not value:
             if default:
                 value = default
             else:
-                print "Error: %s is required, please enter a value" \
-                    % field_name
+                print("Error: %s is required, please enter a value" \
+                    % field_name)
     return value
 
 
@@ -79,8 +79,8 @@ if __name__ == '__main__':
 
     try:
         _, _, result = api.endpoint_activate(ep, reqs)
-        print "Activation successful"
-        print "Subject:", result["subject"]
-        print "Expires:", result["expire_time"]
+        print("Activation successful")
+        print("Subject:", result["subject"])
+        print("Expires:", result["expire_time"])
     except APIError as e:
-        print "Error: %s" % e.message
+        print("Error: %s" % e.message)

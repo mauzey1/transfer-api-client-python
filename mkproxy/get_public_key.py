@@ -36,4 +36,4 @@ if __name__ == '__main__':
 
     _, _, reqs = api.endpoint_activation_requirements(endpoint,
                                                       type="delegate_proxy")
-    print reqs.get_requirement_value("delegate_proxy", "public_key"),
+    print(reqs.get_requirement_value("delegate_proxy", "public_key"), end=' ')

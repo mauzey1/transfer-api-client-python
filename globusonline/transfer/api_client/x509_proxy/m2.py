@@ -69,7 +69,7 @@ def create_proxy(issuer_cred, public_key, lifetime_hours):
     serial = get_random_serial()
     proxy.set_serial_number(serial)
 
-    now = long(time.time())
+    now = int(time.time())
     not_before = ASN1.ASN1_UTCTIME()
     not_before.set_time(now)
     proxy.set_not_before(not_before)

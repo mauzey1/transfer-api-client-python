@@ -25,7 +25,7 @@ from globusonline.transfer.api_client import create_proxy_from_file
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        print "usage: %s proxy_file pubkey_file lifetime_hours" % sys.argv[0]
+        print("usage: %s proxy_file pubkey_file lifetime_hours" % sys.argv[0])
         sys.exit(1)
 
     proxy_file, pubkey_file = sys.argv[1:3]
@@ -35,4 +35,4 @@ if __name__ == '__main__':
         public_key = f.read()
 
     proxy_pem = create_proxy_from_file(proxy_file, public_key, lifetime)
-    print proxy_pem
+    print(proxy_pem)

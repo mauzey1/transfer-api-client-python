@@ -25,8 +25,8 @@ import socket
 import ssl
 import os
 import re
-from httplib import HTTPSConnection
-from urlparse import urlsplit
+from http.client import HTTPSConnection
+from urllib.parse import urlsplit
 
 
 __all__ = ["VerifiedHTTPSConnection"]
@@ -199,10 +199,10 @@ def test_main():
             sys.exit("Timout!")
         else:
             raise
-    print r.status, r.reason
+    print(r.status, r.reason)
     for h in r.getheaders():
-        print "%s: %s" % h
-    print r.read(),
+        print("%s: %s" % h)
+    print(r.read(), end=' ')
 
 
 if __name__ == '__main__':

@@ -39,11 +39,11 @@ import sys
 import platform
 import socket
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 import ssl
-from urlparse import urlparse
-from httplib import BadStatusLine
+from urllib.parse import urlparse
+from http.client import BadStatusLine
 from datetime import datetime, timedelta
 
 # Check if we have a version of python with PEP 0476 (2.7.9+), and
@@ -51,7 +51,7 @@ from datetime import datetime, timedelta
 # that adds verification using private APIs.
 if hasattr(ssl, "_create_unverified_context"):
     STD_HTTPLIB = True
-    from httplib import HTTPSConnection
+    from http.client import HTTPSConnection
 else:
     STD_HTTPLIB = False
     from globusonline.transfer.api_client.verified_https \
@@ -256,14 +256,14 @@ class TransferAPIClient(object):
             headers["Content-Type"] = content_type
 
         if self.print_request:
-            print
-            print ">>>REQUEST>>>:"
-            print "%s %s" % (method, url)
-            for h in headers.iteritems():
-                print "%s: %s" % h
-            print
+            print()
+            print(">>>REQUEST>>>:")
+            print("%s %s" % (method, url))
+            for h in headers.items():
+                print("%s: %s" % h)
+            print()
             if body:
-                print body
+                print(body)
 
         if self.goauth:
             headers["Authorization"] = "Globus-Goauthtoken %s" % self.goauth
@@ -279,7 +279,7 @@ class TransferAPIClient(object):
             response_body = r.read()
             return r, response_body
 
-        for attempt in xrange(self.max_attempts):
+        for attempt in range(self.max_attempts):
             r = None
             try:
                 try:
@@ -324,13 +324,13 @@ class TransferAPIClient(object):
                 time.sleep(RETRY_WAIT_SECONDS)
 
         if self.print_response:
-            print
-            print "<<<RESPONSE<<<:"
-            print r.status, r.reason
+            print()
+            print("<<<RESPONSE<<<:")
+            print(r.status, r.reason)
             for h in r.getheaders():
-                print "%s: %s" % h
-            print
-            print response_body
+                print("%s: %s" % h)
+            print()
+            print(response_body)
 
         return r, response_body
 
@@ -618,11 +618,11 @@ class TransferAPIClient(object):
 
     def endpoint_server(self, endpoint_name, server_id, **kw):
         return self.get(_endpoint_path(endpoint_name, "/server/")
-                        + urllib.quote(str(server_id)) + encode_qs(kw))
+                        + urllib.parse.quote(str(server_id)) + encode_qs(kw))
 
     def endpoint_server_delete(self, endpoint_name, server_id, **kw):
         return self._delete(_endpoint_path(endpoint_name, "/server/")
-                            + urllib.quote(str(server_id)) + encode_qs(kw))
+                            + urllib.parse.quote(str(server_id)) + encode_qs(kw))
 
     def endpoint_server_add(self, endpoint_name, server_data):
         return self.post(_endpoint_path(endpoint_name, "/server"),
@@ -875,7 +875,7 @@ class ActivationRequirementList(object):
         self.req_list = [req for req in self.req_list if req["type"] == type]
         # remap
         keys = [r["type"] + "." + r["name"] for r in self.req_list]
-        self.index_map = dict(zip(keys, xrange(len(keys))))
+        self.index_map = dict(list(zip(keys, list(range(len(keys))))))
 
     def as_json(self):
         return json.dumps(self.json_data)
@@ -998,7 +998,7 @@ def _endpoint_path(endpoint_name, trailing_path=None):
     endpoint_name must be percent encoded, because it may contain
     '#' (used to separate username from endpoint name).
     """
-    p = "/endpoint/%s" % urllib.quote(endpoint_name)
+    p = "/endpoint/%s" % urllib.parse.quote(endpoint_name)
     if trailing_path:
         p += trailing_path
     return p
@@ -1058,7 +1058,7 @@ def encode_qs(kwargs=None, **kw):
         kwargs.update(kw)
 
     if kwargs:
-        return "?" + urllib.urlencode(kwargs)
+        return "?" + urllib.parse.urlencode(kwargs)
     else:
         return ""
 
@@ -1118,7 +1118,7 @@ def process_args(args=None, parser=None):
             parser.error(auth_method_error)
         username = args[0]
         success = False
-        for i in xrange(5):
+        for i in range(5):
             try:
                 result = get_access_token(username=username)
                 args[0] = result.username

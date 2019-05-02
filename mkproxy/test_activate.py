@@ -55,8 +55,8 @@ if __name__ == '__main__':
                                                       type="delegate_proxy")
     with open(proxy_chain_file) as f:
         proxy_chain = f.read()
-    print proxy_chain
+    print(proxy_chain)
     reqs.set_requirement_value("delegate_proxy", "proxy_chain", proxy_chain)
 
     result = api.endpoint_activate(ep, reqs)
-    print result
+    print(result)
